@@ -1,0 +1,52 @@
+## Make 'nextword' (Ctrl+Right) and 'chopwordright' (Ctrl+Delete)
+## stop at word ends instead of at beginnings.
+set afterends
+
+## When soft line wrapping is enabled, make it wrap lines at blanks
+## (tabs and spaces) instead of always at the edge of the screen.
+set atblanks
+
+## Automatically indent a newly created line to the same number of
+## tabs and/or spaces as the preceding line -- or as the next line
+## if the preceding line is the beginning of a paragraph.
+set autoindent
+
+## Constantly display the cursor position in the status bar or minibar.
+set constantshow
+
+## Display a "scrollbar" on the righthand side of the edit window.
+set indicator
+
+## Display line numbers to the left (and any anchors in the margin).
+set linenumbers
+
+## Enable mouse support, if available for your system.  When enabled,
+## mouse clicks can be used to place the cursor, set the mark (with a
+## double click), and execute shortcuts.  The mouse will work in the
+## X Window System, and on the console when gpm is running.
+#set mouse
+
+## Make the Home key smarter: when Home is pressed anywhere but at the
+## very beginning of non-whitespace characters on a line, the cursor
+## will jump to that beginning (either forwards or backwards).  If the
+## cursor is already at that position, it will jump to the true start
+## of the line (the left edge).
+set smarthome
+
+## Spread overlong lines over multiple screen lines.
+set softwrap
+
+## Use this tab size instead of the default; it must be greater than 0.
+set tabsize 4
+
+## Snip whitespace at the end of lines when justifying or hard-wrapping.
+set trimblanks
+
+## To include most of the existing syntax definitions, you can do:
+include "/usr/share/nano/*.nanorc"
+include "/usr/share/nano/extra/*.nanorc"
+include "/usr/share/nano-syntax-highlighting/*.nanorc"
+
+## If <Tab> should always produce four spaces when editing a Python file,
+## independent of the settings of 'tabsize' and 'tabstospaces':
+extendsyntax python tabgives "    "
