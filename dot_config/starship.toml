@@ -9,7 +9,7 @@ success_symbol = '[➜](bold green)'
 # integrate progress:
 [custom.progress]
 command = "progress -w"
-when = "progress -c"
+when = "progress -q"
 symbol = "🗂️  "
 style = "bold green"
 format = "$prefix[$output]($style)"
