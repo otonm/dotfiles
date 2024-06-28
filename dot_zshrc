@@ -98,6 +98,7 @@ zinit load Aloxaf/fzf-tab
 
 zinit ice from"gh-r" as"program"
 zinit load tldr-pages/tlrc
+tldr --update
 
 zinit cdreplay -q
 
