@@ -87,7 +87,6 @@ zinit load ogham/exa
 # zoxide, fuzzy matching cd
 zinit ice from"gh-r" as"program"
 zinit load ajeetdsouza/zoxide
-#eval "$(zoxide init zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
@@ -96,6 +95,9 @@ zinit load zsh-users/zsh-autosuggestions
 
 zinit load zsh-users/zsh-completions
 zinit load Aloxaf/fzf-tab
+
+zinit ice from"gh-r" as"program"
+zinit load tldr-pages/tlrc
 
 zinit cdreplay -q
 
