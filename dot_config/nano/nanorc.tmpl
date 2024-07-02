@@ -43,9 +43,14 @@ set tabsize 4
 set trimblanks
 
 ## To include most of the existing syntax definitions, you can do:
+{{ if eq .chezmoi.os "linux" -}}
 include "/usr/share/nano/*.nanorc"
 include "/usr/share/nano/extra/*.nanorc"
 include "/usr/share/nano-syntax-highlighting/*.nanorc"
+{{ else if eq .chezmoi.os "darwin" -}}
+include "/opt/homebrew/Cellar/nano/*/share/nano/*.nanorc"
+include "/opt/homebrew/Cellar/nano/*/share/nano/extra/*.nanorc"
+{{ end -}}
 
 ## If <Tab> should always produce four spaces when editing a Python file,
 ## independent of the settings of 'tabsize' and 'tabstospaces':

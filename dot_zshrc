@@ -81,7 +81,7 @@ eval "$(fzf --zsh)"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
 # ogham/exa, replacement for ls
-zinit ice from"gh-r" as"program"
+zinit ice from"gh-r" as"program" pick"bin/exa"
 zinit load ogham/exa
 
 # zoxide, fuzzy matching cd
@@ -98,7 +98,10 @@ zinit load Aloxaf/fzf-tab
 
 zinit ice from"gh-r" as"program"
 zinit load tldr-pages/tlrc
-tldr --update
+( tldr --update & ) > /dev/null 2>&1
+
+zinit ice from"gh-r" as"program" mv"bat* -> bat" pick"bat/bat"
+zinit load sharkdp/bat
 
 zinit cdreplay -q
 
@@ -137,6 +140,7 @@ bindkey "^P" history-search-forward
 
 # Aliases
 alias ls='exa --all --long --icons --group-directories-first --header --octal-permissions'
+alias cat='bat --theme "Solarized (dark)" --tabs 4 --style full'
 
 # Enable Homebrew integration
 if [[ -f "/opt/homebrew/bin/brew" ]] then
