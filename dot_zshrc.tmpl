@@ -1,6 +1,27 @@
 # Non-interactive shells get no config
 [[ $- != *i* ]] && return
 
+# ── chezmoi auto-update (once per hour, with reload guard) ────────────────────
+if [[ -z $CHEZMOI_RELOADING ]]; then
+  _chezmoi_try_update() {
+    local stamp="${XDG_CACHE_HOME:-$HOME/.cache}/chezmoi-last-update"
+    local -i interval=3600
+    local -i now; now=$(date +%s)
+    local -i last=0
+    [[ -f $stamp ]] && last=$(< $stamp)
+    (( now - last < interval )) && return 1
+    printf '%s\n' $now >| $stamp
+    ~/.local/bin/chezmoi update --force 2>/dev/null
+  }
+  if _chezmoi_try_update; then
+    export CHEZMOI_RELOADING=1
+    source ~/.zshrc
+    unset CHEZMOI_RELOADING
+    return
+  fi
+  unset -f _chezmoi_try_update
+fi
+
 # ── Exports ───────────────────────────────────────────────────────────────────
 export LANG=en_US.UTF-8
 export EDITOR='nano'
@@ -82,6 +103,10 @@ zinit load Aloxaf/fzf-tab
 zinit ice wait lucid from"gh-r" as"program" atload"{ tldr --update } > /dev/null 2>&1 &!"
 zinit load tldr-pages/tlrc
 
+# compinit must run synchronously before cdreplay, since compinit is otherwise
+# deferred inside the async fast-syntax-highlighting atinit block.
+autoload -Uz compinit && compinit -C
+
 zinit cdreplay -q
 
 # ── Keybindings ───────────────────────────────────────────────────────────────
@@ -120,8 +145,8 @@ ip-internal() echo "Wireless :: IP => $( get_wireless_ip )"
 ip-external() echo "External :: IP => $( curl --silent https://ifconfig.me )"
 ipinfo() { ip-internal && ip-external }
 
-# ── macOS ─────────────────────────────────────────────────────────────────────
 {{ if eq .chezmoi.os "darwin" -}}
+# ── macOS ─────────────────────────────────────────────────────────────────────
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 {{ end -}}
