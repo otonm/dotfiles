@@ -3,6 +3,15 @@
 
 add_newline = true
 
+format = """
+$directory\
+$git_branch$git_status\
+$python\
+$rust$golang$nodejs$java$ruby$c$kotlin$swift$dart$php$lua$zig\
+$custom.progress\
+$line_break\
+$character"""
+
 [character]
 success_symbol = '[➜](bold green)'
 
@@ -34,6 +43,9 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
+truncation_length = 3
+truncate_to_repo = false
+home_symbol = "  ~"
 
 [docker_context]
 symbol = " "
@@ -160,6 +172,7 @@ symbol = " "
 
 [python]
 symbol = " "
+format = '[${symbol}(${version} )(\($virtualenv\) )]($style)'
 
 [rlang]
 symbol = "󰟔 "

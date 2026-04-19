@@ -32,16 +32,10 @@ set -g status-interval 10
 set -g status-style 'bg=#1a1b26 fg=#a9b1d6'
 
 set -g  status-left ''
-set -ga status-left '#[fg=#7aa2f7]'
-set -ga status-left '#(~/.tmux/path.sh "#{pane_current_path}")'
-set -ga status-left '#[fg=#565f89]'
-set -ga status-left '#{?#{!=:#(~/.tmux/git.sh "#{pane_current_path}"),}'
-set -ga status-left ',  #[fg=#f7768e]#(~/.tmux/git.sh "#{pane_current_path}"),}'
-set -ga status-left '#[fg=#565f89]'
-set -ga status-left '#{?#{!=:#({{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} ~/.tmux/lang.py "#{pane_current_path}"),}'
-set -ga status-left ',  #[fg=#e0af68]#({{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} ~/.tmux/lang.py "#{pane_current_path}"),}'
+set -ga status-left '#[fg=#565f89] #[bold,fg=#7aa2f7]#S#[nobold,fg=#565f89] │ '
+set -ga status-left '#[fg=#a9b1d6]#({{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} ~/.tmux/program.py "#{pane_current_command}")'
 set -ga status-left ' '
-set -g status-left-length 120
+set -g  status-left-length 60
 
 set -g status-right ' #[bold,fg=#7aa2f7] #(whoami)#[nobold,fg=#565f89]@#[fg=#a9b1d6]#H  #[fg=#565f89] %d.%m.%Y %H:%M#[default] '
 set -g status-right-length 100
