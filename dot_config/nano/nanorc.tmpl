@@ -43,17 +43,20 @@ set tabsize 4
 set trimblanks
 
 ## ── Catppuccin Mocha ──────────────────────────────────────────────────────────
-## Requires nano 7.1+ for #rrggbb truecolor support.
-set titlecolor     bold,#cdd6f4,#181825   ## Text on Mantle
-set statuscolor    bold,#cdd6f4,#313244   ## Text on Surface0
-set errorcolor     bold,#1e1e2e,#f38ba8   ## Base on Red
-set selectedcolor  bold,#1e1e2e,#89b4fa   ## Base on Blue
-set stripecolor    italic,#45475a         ## Surface1 (column guide)
-set scrollercolor  #cdd6f4,#45475a        ## Text on Surface1
-set numbercolor    #7f849c                ## Overlay1 (line numbers)
-set keycolor       bold,#89b4fa           ## Blue (shortcut letters)
-set functioncolor  #cba6f7                ## Mauve (shortcut descriptions)
-set promptcolor    bold,#f9e2af           ## Yellow (search / goto prompts)
+## Uses ANSI named colors. Because Ghostty is configured with the Catppuccin
+## Mocha terminal palette, named colors resolve to exact Catppuccin values:
+##   black=Base  white=Subtext1  brightblack=Surface2
+##   red=Red  blue=Blue  magenta=Mauve  yellow=Yellow
+set titlecolor     bold,white,black      ## Subtext1 on Base
+set statuscolor    bold,white,black      ## Subtext1 on Base
+set errorcolor     bold,black,red        ## Base on Red
+set selectedcolor  bold,black,blue       ## Base on Blue
+set stripecolor    brightblack           ## Surface2 (column guide)
+set scrollercolor  white,brightblack     ## Subtext1 on Surface2
+set numbercolor    brightblack           ## Surface2 (line numbers)
+set keycolor       bold,blue             ## Blue (shortcut letters)
+set functioncolor  magenta               ## Mauve (shortcut descriptions)
+set promptcolor    bold,yellow           ## Yellow (search / goto prompts)
 
 ## To include most of the existing syntax definitions, you can do:
 {{ if eq .chezmoi.os "linux" -}}
