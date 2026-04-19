@@ -105,28 +105,28 @@ zinit load sharkdp/bat
 
 zinit cdreplay -q
 
-# Funtion to get wireless interface and IP
+# Function to get wireless interface and IP
+{{ if eq .chezmoi.os "linux" -}}
 get_wireless_ip() {
-  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    interface=$(iw dev 2>/dev/null | awk '$1=="Interface"{print $2}' || nmcli device status 2>/dev/null | awk '$2=="wifi" {print $1}')
-    if [[ -n "$interface" ]]; then
-      ip=$(ip -4 -o addr show "$interface" | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-      [[ -n "$ip" ]] && echo "$ip" || echo "?"
-    else
-      echo ""
-    fi
-  elif [[ "$OSTYPE" == "darwin"* ]]; then
-    interface=$(networksetup -listallhardwareports 2>/dev/null | awk '/Wi-Fi|AirPort/{getline; print $2}')
-    if [[ -n "$interface" ]]; then
-      ip=$(ipconfig getifaddr "$interface")
-      [[ -n "$ip" ]] && echo "$ip" || echo "?"
-    else
-      echo ""
-    fi
+  interface=$(iw dev 2>/dev/null | awk '$1=="Interface"{print $2}' || nmcli device status 2>/dev/null | awk '$2=="wifi" {print $1}')
+  if [[ -n "$interface" ]]; then
+    ip=$(ip -4 -o addr show "$interface" | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+    [[ -n "$ip" ]] && echo "$ip" || echo "?"
   else
-    echo ""
+    echo ""
   fi
 }
+{{ else if eq .chezmoi.os "darwin" -}}
+get_wireless_ip() {
+  interface=$(networksetup -listallhardwareports 2>/dev/null | awk '/Wi-Fi|AirPort/{getline; print $2}')
+  if [[ -n "$interface" ]]; then
+    ip=$(ipconfig getifaddr "$interface")
+    [[ -n "$ip" ]] && echo "$ip" || echo "?"
+  else
+    echo ""
+  fi
+}
+{{ end -}}
 
 # Show current ip:
 ip-internal() echo "Wireless :: IP => $( get_wireless_ip )"
@@ -142,7 +142,17 @@ bindkey "^P" history-search-forward
 alias ls='exa --all --long --icons --group-directories-first --header --octal-permissions'
 alias cat='bat --theme "Solarized (dark)" --tabs 4 --style full'
 
+{{ if eq .chezmoi.os "darwin" -}}
 # Enable Homebrew integration
-if [[ -f "/opt/homebrew/bin/brew" ]] then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+{{ end -}}
+# Install TPM plugins if TPM exists but plugins are missing
+if [ -d ~/.tmux/plugins/tpm ] && [ -f ~/.tmux.conf ]; then
+    ~/.tmux/plugins/tpm/bin/install_plugins > /dev/null 2>&1
+fi
+
+# Attach to existing tmux session or create one named "main"
+if [ -z "$TMUX" ]; then
+    tmux new-session -A -s main
 fi

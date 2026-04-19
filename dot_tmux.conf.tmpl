@@ -1,0 +1,97 @@
+# ── Prefix ────────────────────────────────────────────────────────────────────
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+# ── Unbind all defaults ────────────────────────────────────────────────────────
+unbind-key -a
+bind C-a send-prefix          # restore prefix passthrough after unbind-key -a
+
+# ── General ───────────────────────────────────────────────────────────────────
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",xterm-256color:RGB,ghostty:RGB"
+set -g default-shell {{ if eq .chezmoi.os "darwin" }}/bin/zsh{{ else }}/usr/bin/zsh{{ end }}
+
+set -g status on
+set -g base-index 1
+setw -g pane-base-index 1
+set -g escape-time 0
+set -g mouse on
+set -g renumber-windows on
+set -g history-limit 50000
+
+# ── Pane labels ───────────────────────────────────────────────────────────────
+set -g pane-border-status top
+set -g pane-border-format " #[bold]#{pane_index}#[nobold] "
+set -g message-style 'bg=#1a1b26 fg=#7aa2f7 bold'
+set -g pane-border-style 'fg=#565f89'
+set -g pane-active-border-style 'fg=#7aa2f7'
+
+# ── Status bar ────────────────────────────────────────────────────────────────
+set -g status-interval 10
+set -g status-style 'bg=#1a1b26 fg=#a9b1d6'
+
+set -g  status-left ''
+set -ga status-left '#[fg=#7aa2f7]'
+set -ga status-left '#(~/.tmux/path.sh "#{pane_current_path}")'
+set -ga status-left '#[fg=#565f89]'
+set -ga status-left '#{?#{!=:#(~/.tmux/git.sh "#{pane_current_path}"),}'
+set -ga status-left ',  #[fg=#f7768e]#(~/.tmux/git.sh "#{pane_current_path}"),}'
+set -ga status-left '#[fg=#565f89]'
+set -ga status-left '#{?#{!=:#({{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} ~/.tmux/lang.py "#{pane_current_path}"),}'
+set -ga status-left ',  #[fg=#e0af68]#({{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} ~/.tmux/lang.py "#{pane_current_path}"),}'
+set -ga status-left ' '
+set -g status-left-length 120
+
+set -g status-right ' #[bold,fg=#7aa2f7] #(whoami)#[nobold,fg=#565f89]@#[fg=#a9b1d6]#H  #[fg=#565f89] %d.%m.%Y %H:%M#[default] '
+set -g status-right-length 100
+
+setw -g window-status-format ''
+setw -g window-status-current-format ''
+
+# ── Splits ────────────────────────────────────────────────────────────────────
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# ── Pane management ───────────────────────────────────────────────────────────
+bind w kill-pane
+
+bind 1 select-pane -t :.1
+bind 2 select-pane -t :.2
+bind 3 select-pane -t :.3
+bind 4 select-pane -t :.4
+bind 5 select-pane -t :.5
+bind 6 select-pane -t :.6
+bind 7 select-pane -t :.7
+bind 8 select-pane -t :.8
+bind 9 select-pane -t :.9
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+bind r source-file ~/.tmux.conf \; display "Config reloaded!"
+
+# ── Plugins────────────────────────────────────────────────────────────────────
+
+# tmux-menus
+set -g @plugin 'jaclu/tmux-menus'
+set -g @menus_trigger 'm'
+set -g @menus_location_x 'W'
+set -g @menus_location_y 'S'
+set -g @menus_show_key_hints 'Yes'
+set -g @menus_use_cache 'No'
+
+# tmux-sidebar
+set -g @plugin 'tmux-plugins/tmux-sidebar'
+set -g @sidebar-tree-command 'eza --tree --icons=always'
+set -g @sidebar-tree-pager 'moor'
+set -g @sidebar-tree-width '60'
+
+# Auto-install TPM if missing, then install all plugins
+if "test ! -d ~/.tmux/plugins/tpm" \
+    "run 'git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins'"
+
+# Initialize TMUX plugin manager
+set -g @plugin 'tmux-plugins/tpm'
+run '~/.tmux/plugins/tpm/tpm'
+
+# Update all plugins
+bind U run '~/.tmux/plugins/tpm/bin/update_plugins all'
