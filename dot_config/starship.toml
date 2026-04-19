@@ -8,7 +8,7 @@ $directory\
 $git_branch$git_status\
 $python\
 $rust$golang$nodejs$java$ruby$c$kotlin$swift$dart$php$lua$zig\
-$custom.progress\
+${custom.progress}\
 $line_break\
 $character"""
 
