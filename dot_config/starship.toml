@@ -13,14 +13,15 @@ $line_break\
 $character"""
 
 [character]
-success_symbol = '[➜](bold green)'
+success_symbol = '[➜](bold #a6e3a1)'
+error_symbol = '[➜](bold #f38ba8)'
 
 # integrate progress:
 [custom.progress]
 command = "progress -w"
 when = "progress -q"
 symbol = "🗂️  "
-style = "bold green"
+style = "bold #a6e3a1"
 format = "$prefix[$output]($style)"
 
 [aws]
@@ -31,6 +32,7 @@ symbol = " "
 
 [c]
 symbol = " "
+style = "bold #89b4fa"
 
 [conda]
 symbol = " "
@@ -40,21 +42,25 @@ symbol = " "
 
 [dart]
 symbol = " "
+style = "bold #89dceb"
 
 [directory]
 read_only = " 󰌾"
 truncation_length = 3
 truncate_to_repo = false
 home_symbol = "  ~"
+style = "bold #89b4fa"
 
 [docker_context]
 symbol = " "
 
 [elixir]
 symbol = " "
+style = "bold #cba6f7"
 
 [elm]
 symbol = " "
+style = "bold #89b4fa"
 
 [fennel]
 symbol = " "
@@ -64,15 +70,18 @@ symbol = " "
 
 [git_branch]
 symbol = " "
+style = "bold #cba6f7"
 
 [golang]
 symbol = " "
+style = "bold #89dceb"
 
 [guix_shell]
 symbol = " "
 
 [haskell]
 symbol = " "
+style = "bold #cba6f7"
 
 [haxe]
 symbol = " "
@@ -85,15 +94,19 @@ ssh_symbol = " "
 
 [java]
 symbol = " "
+style = "bold #fab387"
 
 [julia]
 symbol = " "
+style = "bold #cba6f7"
 
 [kotlin]
 symbol = " "
+style = "bold #fab387"
 
 [lua]
 symbol = " "
+style = "bold #89b4fa"
 
 [memory_usage]
 symbol = "󰍛 "
@@ -103,15 +116,18 @@ symbol = "󰔷 "
 
 [nim]
 symbol = "󰆥 "
+style = "bold #f9e2af"
 
 [nix_shell]
 symbol = " "
 
 [nodejs]
 symbol = " "
+style = "bold #a6e3a1"
 
 [ocaml]
 symbol = " "
+style = "bold #fab387"
 
 [os.symbols]
 Alpaquita = " "
@@ -163,9 +179,11 @@ symbol = "󰏗 "
 
 [perl]
 symbol = " "
+style = "bold #89b4fa"
 
 [php]
 symbol = " "
+style = "bold #b4befe"
 
 [pijul_channel]
 symbol = " "
@@ -173,21 +191,28 @@ symbol = " "
 [python]
 symbol = " "
 format = '[${symbol}(${version} )(\($virtualenv\) )]($style)'
+style = "bold #f9e2af"
 
 [rlang]
 symbol = "󰟔 "
+style = "bold #89b4fa"
 
 [ruby]
 symbol = " "
+style = "bold #f38ba8"
 
 [rust]
 symbol = " "
+style = "bold #fab387"
 
 [scala]
 symbol = " "
+style = "bold #f38ba8"
 
 [swift]
 symbol = " "
+style = "bold #fab387"
 
 [zig]
 symbol = " "
+style = "bold #fab387"

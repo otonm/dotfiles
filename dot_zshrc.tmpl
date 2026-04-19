@@ -45,6 +45,43 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
+# ── Catppuccin Mocha palette ──────────────────────────────────────────────────
+# fzf — official Catppuccin Mocha preset
+export FZF_DEFAULT_OPTS="\
+  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+  --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+  --color=selected-bg:#45475a,border:#313244,label:#cdd6f4"
+
+# zsh-autosuggestions — Overlay1
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7f849c"
+
+# fast-syntax-highlighting — set before plugin loads; fsh respects pre-set keys
+typeset -gA FAST_HIGHLIGHT_STYLES
+FAST_HIGHLIGHT_STYLES[unknown-token]='fg=#f38ba8,bold'
+FAST_HIGHLIGHT_STYLES[reserved-word]='fg=#cba6f7,bold'
+FAST_HIGHLIGHT_STYLES[alias]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[suffix-alias]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[global-alias]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[builtin]='fg=#89b4fa,bold'
+FAST_HIGHLIGHT_STYLES[function]='fg=#89b4fa'
+FAST_HIGHLIGHT_STYLES[command]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[precommand]='fg=#fab387,italic'
+FAST_HIGHLIGHT_STYLES[commandseparator]='fg=#cba6f7'
+FAST_HIGHLIGHT_STYLES[path]='fg=#89b4fa'
+FAST_HIGHLIGHT_STYLES[path_prefix]='fg=#45475a'
+FAST_HIGHLIGHT_STYLES[globbing]='fg=#89dceb'
+FAST_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=#a6e3a1'
+FAST_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#89dceb'
+FAST_HIGHLIGHT_STYLES[assign]='fg=#f9e2af'
+FAST_HIGHLIGHT_STYLES[comment]='fg=#585b70,italic'
+FAST_HIGHLIGHT_STYLES[single-hyphen-option]='fg=#fab387'
+FAST_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#fab387'
+FAST_HIGHLIGHT_STYLES[variable]='fg=#f9e2af'
+FAST_HIGHLIGHT_STYLES[rc-quote]='fg=#a6e3a1'
+
 # ── zinit bootstrap ───────────────────────────────────────────────────────────
 ZINIT_HOME="$HOME/.local/share/zinit/zinit.git"
 [[ ! -d $ZINIT_HOME/.git ]] && mkdir -p "${ZINIT_HOME:h}" && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
@@ -85,7 +122,7 @@ zinit load hlissner/zsh-autopair
 zinit ice wait"0c" lucid reset \
     atclone"local P=${${(M)OSTYPE:#*darwin*}:+g}
             \${P}sed -i \
-            '/DIR/c\DIR 38;5;63;1' LS_COLORS; \
+            '/DIR/c\DIR 1;38;2;137;180;250' LS_COLORS; \
             \${P}dircolors -b LS_COLORS > c.zsh" \
     atpull'%atclone' pick"c.zsh" nocompile'!' \
     atload='zstyle ":completion:*" list-colors ${(s.:.)LS_COLORS}'
@@ -116,7 +153,7 @@ bindkey "^P" history-search-forward
 
 # ── Aliases ───────────────────────────────────────────────────────────────────
 alias ls='eza --all --long --icons=always --group-directories-first --header --octal-permissions'
-alias cat='bat --theme "Solarized (dark)" --tabs 4 --style full'
+alias cat='bat --theme "Catppuccin Mocha" --tabs 4 --style full'
 
 # ── Functions ─────────────────────────────────────────────────────────────────
 {{ if eq .chezmoi.os "linux" -}}
