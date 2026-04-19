@@ -1,0 +1,34 @@
+#!/bin/sh
+# Public IPv4 widget for tmux status bar, cached for 5 minutes.
+CACHE="${TMPDIR:-/tmp}/tmux-public-ip"
+CACHE="$CACHE" python3 -c '
+import os, time, subprocess
+
+cache = os.environ.get("CACHE", "/tmp/tmux-public-ip")
+max_age = 300
+ip = None
+
+if os.path.exists(cache):
+    if time.time() - os.path.getmtime(cache) < max_age:
+        with open(cache) as f:
+            ip = f.read().strip()
+
+if ip is None:
+    try:
+        r = subprocess.run(
+            ["curl", "-4", "--silent", "--max-time", "5", "https://ifconfig.me"],
+            capture_output=True, text=True, timeout=6,
+        )
+        ip = r.stdout.strip()
+        if ip:
+            with open(cache, "w") as f:
+                f.write(ip)
+    except Exception:
+        pass
+    if ip is None and os.path.exists(cache):
+        with open(cache) as f:
+            ip = f.read().strip()
+
+if ip:
+    print("\uf0ac  " + ip)
+' 2>/dev/null

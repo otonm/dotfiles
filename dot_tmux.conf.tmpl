@@ -31,14 +31,19 @@ set -g pane-active-border-style 'fg=#89b4fa'
 set -g status-interval 10
 set -g status-style 'bg=#1e1e2e fg=#cdd6f4'
 
-set -g  status-left ''
-set -ga status-left '#[fg=#45475a] #[bold,fg=#89b4fa]#S#[nobold,fg=#45475a] │ '
+set -g  status-left ' '
 set -ga status-left '#[fg=#cdd6f4]#({{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} ~/.tmux/program.py "#{pane_current_command}")'
 set -ga status-left ' '
 set -g  status-left-length 60
 
-set -g status-right ' #[bold,fg=#89b4fa] #(whoami)#[nobold,fg=#45475a]@#[fg=#cdd6f4]#H  #[fg=#45475a] %d.%m.%Y %H:%M#[default] '
-set -g status-right-length 100
+set -g  status-right ''
+set -ga status-right '#(~/.tmux/tailscale.sh) '
+set -ga status-right '#[fg=#45475a]│ '
+set -ga status-right '#(~/.tmux/public_ip.sh) '
+set -ga status-right '#[fg=#45475a]│ '
+set -ga status-right '#[bold,fg=#89b4fa] #(whoami)#[nobold,fg=#45475a]@#[fg=#cdd6f4]#H  '
+set -ga status-right '#[fg=#89b4fa] %d.%m.%Y %H:%M#[default] '
+set -g  status-right-length 200
 
 setw -g window-status-format ''
 setw -g window-status-current-format ''
