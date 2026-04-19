@@ -1,8 +1,14 @@
 #!/bin/sh
 # Tailscale status widget for tmux status bar.
 # Outputs: green lock + name + IP when connected; red lock + "down" when not.
+{{ if eq .chezmoi.os "darwin" -}}
+TAILSCALE="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+[ -x "$TAILSCALE" ] || exit 0
+{{ else -}}
 command -v tailscale >/dev/null 2>&1 || exit 0
-TS_JSON=$(tailscale status --json 2>/dev/null) python3 -c '
+TAILSCALE="tailscale"
+{{ end -}}
+TS_JSON=$("$TAILSCALE" status --json 2>/dev/null) {{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} -c '
 import os, json
 try:
     d = json.loads(os.environ.get("TS_JSON", "{}"))

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Public IPv4 widget for tmux status bar, cached for 5 minutes.
 CACHE="${TMPDIR:-/tmp}/tmux-public-ip"
-CACHE="$CACHE" python3 -c '
+CACHE="$CACHE" {{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/python3{{ else }}/usr/bin/python3{{ end }} -c '
 import os, time, subprocess
 
 cache = os.environ.get("CACHE", "/tmp/tmux-public-ip")
