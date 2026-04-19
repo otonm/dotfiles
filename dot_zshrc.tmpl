@@ -1,70 +1,66 @@
-# Exports
+# Non-interactive shells get no config
+[[ $- != *i* ]] && return
+
+# ── Exports ───────────────────────────────────────────────────────────────────
 export LANG=en_US.UTF-8
 export EDITOR='nano'
+typeset -U path PATH
 
-# History
+# ── History ───────────────────────────────────────────────────────────────────
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
+setopt appendhistory sharehistory
+setopt hist_ignore_space hist_ignore_all_dups hist_save_no_dups hist_find_no_dups
 
-# Options
-setopt extendedglob nomatch notify
-unsetopt AUTO_CD               # Implicit CD slows down plugins
-#setopt hash_list_all          # hash everything before completion
-setopt completealiases        # complete alisases
-setopt always_to_end          # when completing from the middle of a word, move the cursor to the end of the word
-setopt complete_in_word       # allow completion from within a word/phrase
-setopt nocorrect              # spelling correction for commands
-#setopt list_ambiguous         # complete as much of a completion until it gets ambiguous.
-#setopt nolisttypes
-#setopt listpacked
-#setopt automenu
-
-# Emacs keybindings
+# ── Options ───────────────────────────────────────────────────────────────────
+setopt extendedglob nomatch notify completealiases always_to_end complete_in_word nocorrect
+unsetopt AUTO_CD
 bindkey -e
 
-# Initalize autocompletions
-zstyle :compinstall filename '$HOME/.zshrc'
-autoload -Uz compinit
-compinit
-
-# Make autocompletion case-insensitive
+# ── Completion styles (defined before compinit runs via zinit) ────────────────
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-# Disable menu (for fzf)
 zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
-# Initialize zinit
+# ── zinit bootstrap ───────────────────────────────────────────────────────────
 ZINIT_HOME="$HOME/.local/share/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+[[ ! -d $ZINIT_HOME/.git ]] && mkdir -p "${ZINIT_HOME:h}" && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Install and initialize starship
+# ── Prompt (sync — must be ready before first prompt) ─────────────────────────
 zinit ice as"command" from"github-rel" \
           atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
           atpull"%atclone" src"init.zsh"
 zinit light starship/starship
 
-# Install plugins
+# ── Core CLI tools (sync — aliased immediately) ───────────────────────────────
+zinit ice from"gh-r" as"program"
+zinit load junegunn/fzf
+eval "$(fzf --zsh)"
+
+zinit ice from"gh-r" as"program"
+zinit load eza-community/eza
+
+zinit ice from"gh-r" as"program" mv"bat* -> bat" pick"bat/bat"
+zinit load sharkdp/bat
+
+# ── Zsh plugins (sync — keybinding widgets must be registered before first prompt)
 zinit load zdharma-continuum/history-search-multi-word
 
+# ── Zsh plugins (async) ───────────────────────────────────────────────────────
+
+# Syntax highlighting — must be last plugin; triggers cached compinit via atinit
 zinit ice wait lucid atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay"
 zinit load zdharma-continuum/fast-syntax-highlighting
 
+zinit ice wait lucid
 zinit load hlissner/zsh-autopair
 
-# Install LC_COLORS extension
+# LS_COLORS — reset prevents color bleed from prior atclone runs
 zinit ice wait"0c" lucid reset \
     atclone"local P=${${(M)OSTYPE:#*darwin*}:+g}
             \${P}sed -i \
@@ -74,38 +70,30 @@ zinit ice wait"0c" lucid reset \
     atload='zstyle ":completion:*" list-colors ${(s.:.)LS_COLORS}'
 zinit load trapd00r/LS_COLORS
 
-# junegunn/fzf-bin
-zinit ice from"gh-r" as"program"
-zinit load junegunn/fzf
-eval "$(fzf --zsh)"
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-
-# ogham/exa, replacement for ls
-zinit ice from"gh-r" as"program" pick"bin/exa"
-zinit load ogham/exa
-
-# zoxide, fuzzy matching cd
-zinit ice from"gh-r" as"program"
-zinit load ajeetdsouza/zoxide
-eval "$(zoxide init --cmd cd zsh)"
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
 zinit ice wait lucid atload"!_zsh_autosuggest_start"
 zinit load zsh-users/zsh-autosuggestions
 
+zinit ice wait lucid
 zinit load zsh-users/zsh-completions
+
+zinit ice wait lucid
 zinit load Aloxaf/fzf-tab
 
-zinit ice from"gh-r" as"program"
+zinit ice wait lucid from"gh-r" as"program" atload"{ tldr --update } > /dev/null 2>&1 &!"
 zinit load tldr-pages/tlrc
-( tldr --update & ) > /dev/null 2>&1
-
-zinit ice from"gh-r" as"program" mv"bat* -> bat" pick"bat/bat"
-zinit load sharkdp/bat
 
 zinit cdreplay -q
 
-# Function to get wireless interface and IP
+# ── Keybindings ───────────────────────────────────────────────────────────────
+bindkey "^F" history-search-multi-word
+bindkey "^N" history-search-backward
+bindkey "^P" history-search-forward
+
+# ── Aliases ───────────────────────────────────────────────────────────────────
+alias ls='eza --all --long --icons=always --group-directories-first --header --octal-permissions'
+alias cat='bat --theme "Solarized (dark)" --tabs 4 --style full'
+
+# ── Functions ─────────────────────────────────────────────────────────────────
 {{ if eq .chezmoi.os "linux" -}}
 get_wireless_ip() {
   interface=$(iw dev 2>/dev/null | awk '$1=="Interface"{print $2}' || nmcli device status 2>/dev/null | awk '$2=="wifi" {print $1}')
@@ -128,31 +116,16 @@ get_wireless_ip() {
 }
 {{ end -}}
 
-# Show current ip:
 ip-internal() echo "Wireless :: IP => $( get_wireless_ip )"
 ip-external() echo "External :: IP => $( curl --silent https://ifconfig.me )"
 ipinfo() { ip-internal && ip-external }
 
-# Keybindings
-bindkey "^F" history-search-multi-word
-bindkey "^N" history-search-backward
-bindkey "^P" history-search-forward
-
-# Aliases
-alias ls='exa --all --long --icons --group-directories-first --header --octal-permissions'
-alias cat='bat --theme "Solarized (dark)" --tabs 4 --style full'
-
+# ── macOS ─────────────────────────────────────────────────────────────────────
 {{ if eq .chezmoi.os "darwin" -}}
-# Enable Homebrew integration
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 {{ end -}}
-# Install TPM plugins if TPM exists but plugins are missing
-if [ -d ~/.tmux/plugins/tpm ] && [ -f ~/.tmux.conf ]; then
-    ~/.tmux/plugins/tpm/bin/install_plugins > /dev/null 2>&1
-fi
-
-# Attach to existing tmux session or create one named "main"
-if [ -z "$TMUX" ]; then
-    tmux new-session -A -s main
-fi
+# ── Tmux ──────────────────────────────────────────────────────────────────────
+[[ -d ~/.tmux/plugins/tpm && -f ~/.tmux.conf ]] && \
+  ~/.tmux/plugins/tpm/bin/install_plugins > /dev/null 2>&1
+[[ -z "$TMUX" ]] && tmux new-session -A -s main
