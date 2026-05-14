@@ -38,7 +38,23 @@ On first apply, chezmoi automatically runs two setup scripts:
 - **`run_once_00-bootstrap-dependencies`** — installs system packages (`curl`, `unzip`, `fontconfig`) via the platform's package manager; installs Homebrew on macOS
 - **`run_once_01-install-firacode-nerd-font`** — downloads and installs FiraCode Nerd Font
 
-### 3. Post-install
+### 3. Set Zsh as the default shell
+
+If zsh is not already your default shell, install it via your package manager and then run:
+
+```sh
+# Find the zsh path
+which zsh
+
+# Set it as default (replace /usr/bin/zsh with the path above if different)
+chsh -s /usr/bin/zsh
+```
+
+On macOS, zsh is the default since Catalina and no action is needed.
+
+Log out and back in for the change to take effect.
+
+### 4. Post-install
 
 - **Zsh plugins** — zinit downloads plugins on first shell launch
 - **Tmux plugins** — TPM installs plugins on first tmux launch (or press `prefix + I`)
