@@ -58,15 +58,17 @@ set keycolor       bold,blue             ## Blue (shortcut letters)
 set functioncolor  magenta               ## Mauve (shortcut descriptions)
 set promptcolor    bold,yellow           ## Yellow (search / goto prompts)
 
-## To include most of the existing syntax definitions, you can do:
+## Built-in syntax definitions
 {{ if eq .chezmoi.os "linux" -}}
 include "/usr/share/nano/*.nanorc"
 include "/usr/share/nano/extra/*.nanorc"
-include "/usr/share/nano-syntax-highlighting/*.nanorc"
 {{ else if eq .chezmoi.os "darwin" -}}
 include "/opt/homebrew/Cellar/nano/*/share/nano/*.nanorc"
 include "/opt/homebrew/Cellar/nano/*/share/nano/extra/*.nanorc"
 {{ end -}}
+
+## Extended syntax highlighting (galenguyer/nano-syntax-highlighting)
+include "~/.local/share/nano-syntax-highlighting/*.nanorc"
 
 ## If <Tab> should always produce four spaces when editing a Python file,
 ## independent of the settings of 'tabsize' and 'tabstospaces':

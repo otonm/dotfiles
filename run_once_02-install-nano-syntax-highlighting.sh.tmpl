@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEST="$HOME/.local/share/nano-syntax-highlighting"
+
+if [[ -d "$DEST/.git" ]]; then
+  echo "==> Updating nano-syntax-highlighting..."
+  git -C "$DEST" pull --ff-only --quiet
+else
+  echo "==> Installing nano-syntax-highlighting..."
+  mkdir -p "$(dirname "$DEST")"
+  git clone --depth=1 --quiet https://github.com/galenguyer/nano-syntax-highlighting.git "$DEST"
+fi
+
+echo "==> nano-syntax-highlighting OK."

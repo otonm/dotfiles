@@ -33,10 +33,11 @@ This command installs chezmoi, clones the repo, and applies all dotfiles in one 
 
 ### 2. Bootstrap scripts
 
-On first apply, chezmoi automatically runs two setup scripts:
+On first apply, chezmoi automatically runs three setup scripts:
 
 - **`run_once_00-bootstrap-dependencies`** — installs `zsh`, `tmux`, and other system packages via the platform's package manager; installs Homebrew on macOS
 - **`run_once_01-install-firacode-nerd-font`** — downloads and installs FiraCode Nerd Font
+- **`run_once_02-install-nano-syntax-highlighting`** — clones [galenguyer/nano-syntax-highlighting](https://github.com/galenguyer/nano-syntax-highlighting) to `~/.local/share/nano-syntax-highlighting`
 
 ### 3. Set Zsh as the default shell
 
