@@ -35,12 +35,12 @@ This command installs chezmoi, clones the repo, and applies all dotfiles in one 
 
 On first apply, chezmoi automatically runs two setup scripts:
 
-- **`run_once_00-bootstrap-dependencies`** — installs system packages (`curl`, `unzip`, `fontconfig`) via the platform's package manager; installs Homebrew on macOS
+- **`run_once_00-bootstrap-dependencies`** — installs `zsh`, `tmux`, and other system packages via the platform's package manager; installs Homebrew on macOS
 - **`run_once_01-install-firacode-nerd-font`** — downloads and installs FiraCode Nerd Font
 
 ### 3. Set Zsh as the default shell
 
-If zsh is not already your default shell, install it via your package manager and then run:
+Zsh is installed by the bootstrap script. To make it your default shell, run:
 
 ```sh
 # Find the zsh path
