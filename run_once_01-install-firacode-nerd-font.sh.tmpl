@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ if eq .chezmoi.os "linux" -}}
+FONT_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/FiraCodeNerdFont"
+MARKER="$FONT_DIR/FiraCodeNerdFontMono-Regular.ttf"
+
+if [[ ! -f "$MARKER" ]]; then
+  echo "==> Installing FiraCode Nerd Font Mono (Linux)..."
+  mkdir -p "$FONT_DIR"
+
+  LATEST=$(curl -fsSL "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest" \
+    | grep '"tag_name"' | cut -d'"' -f4)
+
+  curl -fsSL \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/${LATEST}/FiraCode.zip" \
+    -o /tmp/FiraCode.zip
+
+  # Extract only the Mono variants to keep the font dir lean
+  unzip -oj /tmp/FiraCode.zip '*Mono*' -d "$FONT_DIR"
+  rm /tmp/FiraCode.zip
+
+  fc-cache -f "$FONT_DIR"
+  echo "==> FiraCode Nerd Font Mono installed (${LATEST})."
+else
+  echo "==> FiraCode Nerd Font Mono already present, skipping."
+fi
+
+{{ else if eq .chezmoi.os "darwin" -}}
+if ! brew list --cask font-fira-code-nerd-font &>/dev/null; then
+  echo "==> Installing FiraCode Nerd Font Mono (macOS)..."
+  brew tap homebrew/cask-fonts 2>/dev/null || true
+  brew install --cask font-fira-code-nerd-font
+  echo "==> FiraCode Nerd Font Mono installed."
+else
+  echo "==> FiraCode Nerd Font Mono already present, skipping."
+fi
+
+{{ end -}}

@@ -1,5 +1,5 @@
 font-family = FiraCode Nerd Font Mono
-font-feature = calt, cv02, cv06, cv15, cv16, cv30, ordn, salt, ss03
+font-feature = calt, cv02, cv06, cv15, cv30, salt, ss03
 font-size = 12
 font-thicken = 0
 theme = Catppuccin Mocha
